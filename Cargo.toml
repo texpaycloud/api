@@ -14,9 +14,8 @@ serde = { version = "1", features = ["derive"] }
 hyper = { version = "0", features = ["full"] }
 routerify = "3"
 dotenvy = "0"
-sqlx = { version = "0.7", features = [ "runtime-tokio", "runtime-tokio-rustls", "postgres", "macros", "time", "chrono", "notifications"] }
+sqlx = { version = "0.7", features = [ "runtime-tokio", "runtime-tokio-rustls", "postgres", "macros", "time", "chrono"] }
 chrono = {version = "0", features = ["serde"] }
 aws-config = {version = "0"}
 aws-sdk-sesv2 = {version = "0"}
-portpicker = "0"
 futures = "0"

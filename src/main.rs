@@ -1,15 +1,15 @@
-use std::convert::Infallible;
-use std::env;
-use anyhow::{Context, Result};
-use sqlx::postgres::{PgPoolOptions, PgRow};
-use sqlx::Row;
-use serde::{Deserialize, Serialize};
+use anyhow::{Context, Result, Error};
 use chrono::{DateTime, Utc};
 use hyper::{Body, Request, Response, Server, StatusCode};
 use routerify::prelude::*;
-use routerify::{Middleware, Router, RouterService, RequestInfo};
+use routerify::{Middleware, RequestInfo, Router, RouterService};
+use serde::{Deserialize, Serialize};
+use sqlx::postgres::{PgPoolOptions, PgRow};
+use sqlx::Row;
+use std::convert::Infallible;
+use std::env;
 use std::net::SocketAddr;
-use tracing::{info, error};
+use tracing::{error, info};
 
 mod email;
 
@@ -80,8 +80,14 @@ async fn home_handler(req: Request<Body>) -> Result<Response<Body>, Infallible> 
 }
 
 async fn logger(req: Request<Body>) -> Result<Request<Body>, Infallible> {
-    info!("{} {} {}", req.remote_addr(), req.method(), req.uri().path());
-    Ok(req) 
+    info!(
+        "{} {} {}",
+        req.remote_addr(),
+        req.method(),
+        req.uri().path()
+    );
+    
+    Ok(req)
 }
 
 async fn error_handler(err: routerify::RouteError, _: RequestInfo) -> Response<Body> {
@@ -108,7 +114,6 @@ async fn main() -> Result<()> {
     // Set up tracing
     tracing_subscriber::fmt::init();
 
-
     // Connect to database
     let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = PgPoolOptions::new()
@@ -119,10 +124,9 @@ async fn main() -> Result<()> {
     info!("Connected to database");
 
     // Serve API routes
-    let port = portpicker::pick_unused_port().context("Failed to find unused port")?;
     let router = router();
     let service = RouterService::new(router).unwrap();
-    let addr = SocketAddr::from(([127, 0, 0, 1], port));
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     let server = Server::bind(&addr).serve(service);
 
     info!("Listening on http://{}", addr);
