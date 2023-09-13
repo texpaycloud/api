@@ -43,16 +43,10 @@ pub async fn run() -> Result<(), Error> {
     let router = router();
     let service = RouterService::new(router).unwrap();
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    let server = Server::bind(&addr).serve(service);
 
-    match server.await {
-        Ok(_) => {
-            info!("Listening on http://{}", addr);
-            return Ok(());
-        },
-        Err(err) => { 
-        error!("Server error: {}", err);
-            return Err(err.into()); 
-        }
-    }
-    }
+    Server::bind(&addr).serve(service).await.context("Failed to start server")?;
+    info!("Listening on http://{}", addr);
+    
+    Ok(())
+
+}

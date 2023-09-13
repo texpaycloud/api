@@ -5,6 +5,8 @@ mod api;
 mod db;
 
 use anyhow::{Context, Result};
+use tokio::task;
+use tracing::info;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -15,13 +17,18 @@ async fn main() -> Result<()> {
     
     // Connect to database
     let mut db = db::connection::DbConnection::new(); 
-    db.connect().await.context("Failed to connect to database")?;
+    db.connect().await.context("Failed to connect to database").unwrap();
 
-    // Serve API routes
-    api::run().await.context("Failed to start API server")?;
+    // Spawn a new task for the gRPC server
+    let grpc_task = task::spawn(async {
+        grpc::run().await.context("Failed to start grpc server").unwrap();
+    });
+
+    let api_task = task::spawn(async {
+        api::run().await.context("Failed to start API server").unwrap();
+    });
     
-    // Serve grpc
-    grpc::run().await.context("Failed to start grpc server")?;
+    tokio::try_join!(grpc_task, api_task)?;
 
     Ok(())
 }
