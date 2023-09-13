@@ -3,8 +3,6 @@ name = "api"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 anyhow = "1"
 tracing = "0"
@@ -16,6 +14,14 @@ routerify = "3"
 dotenvy = "0"
 sqlx = { version = "0.7", features = [ "runtime-tokio", "runtime-tokio-rustls", "postgres", "macros", "time", "chrono"] }
 chrono = {version = "0", features = ["serde"] }
-aws-config = {version = "0"}
-aws-sdk-sesv2 = {version = "0"}
+aws-config = "0"
+aws-sdk-sesv2 = "0"
+aws-sdk-sqs = "0"
 futures = "0"
+async-trait = "0"
+prost = "0"
+tonic = "0"
+
+
+[build-dependencies]
+tonic-build = "0"

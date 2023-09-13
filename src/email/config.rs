@@ -1,11 +1,5 @@
-pub enum EmailProvider {
-    Sendgrid,
-    SES,
-    Mailgun,
-}
-
 pub struct EmailConfig {
-    pub provider: EmailProvider,
+    pub provider: super::EmailProvider,
     pub api_key: String,
     pub domain: String,
     pub from: String,

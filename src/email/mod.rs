@@ -11,6 +11,13 @@ pub struct Email {
     pub body: String,
 }
 
+pub enum EmailProvider {
+    Sendgrid,
+    SES,
+    Mailgun,
+}
+
+#[async_trait::async_trait]
 pub trait EmailService {
-    fn send(&self, email: Email) -> Result<(), Error>;
+    async fn send_one(&self, email: Email) -> Result<(), Error>;
 }
