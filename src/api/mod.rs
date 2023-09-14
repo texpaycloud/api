@@ -48,5 +48,4 @@ pub async fn run() -> Result<(), Error> {
     info!("Listening on http://{}", addr);
     
     Ok(())
-
 }
