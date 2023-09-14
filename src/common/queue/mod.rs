@@ -1,7 +1,7 @@
 use anyhow::{Error, Result};
 use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_sqs::{types::Message, Client};
-use tracing::{error, info};
+use tracing::error;
 
 pub struct SQS {
     client: Client,

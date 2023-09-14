@@ -6,7 +6,7 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 use tracing::{error, info};
 
-async fn home_handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+async fn home_handler(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
     Ok(Response::new(Body::from("Hello world")))
 }
 

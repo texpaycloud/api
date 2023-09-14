@@ -1,8 +1,8 @@
-use anyhow::{Context, Error, Result};
-use sqlx::postgres::{PgPoolOptions, PgRow};
+use anyhow::{Error, Result};
+use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use std::env;
-use tracing::{error, info};
+use tracing::info;
 
 pub struct DbConnection {
     pool: Option<PgPool>,
