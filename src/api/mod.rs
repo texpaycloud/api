@@ -1,11 +1,10 @@
-use anyhow::{Context, Result, Error};
+use anyhow::{Context, Error, Result};
 use hyper::{Body, Request, Response, Server, StatusCode};
 use routerify::prelude::*;
 use routerify::{Middleware, RequestInfo, Router, RouterService};
-use std::net::SocketAddr;
 use std::convert::Infallible;
-use tracing::{info, error};
-
+use std::net::SocketAddr;
+use tracing::{error, info};
 
 async fn home_handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     Ok(Response::new(Body::from("Hello world")))
@@ -18,7 +17,7 @@ async fn logger(req: Request<Body>) -> Result<Request<Body>, Infallible> {
         req.method(),
         req.uri().path()
     );
-    
+
     Ok(req)
 }
 
@@ -44,8 +43,11 @@ pub async fn run() -> Result<(), Error> {
     let service = RouterService::new(router).unwrap();
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
-    Server::bind(&addr).serve(service).await.context("Failed to start server")?;
+    Server::bind(&addr)
+        .serve(service)
+        .await
+        .context("Failed to start server")?;
     info!("Listening on http://{}", addr);
-    
+
     Ok(())
 }

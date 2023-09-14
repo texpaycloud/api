@@ -5,4 +5,3 @@ pub struct EmailConfig {
     pub from: String,
     pub from_name: String,
 }
-

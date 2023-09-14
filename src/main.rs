@@ -1,15 +1,15 @@
-mod email;
-mod common;
-mod grpc;
 mod api;
+mod common;
 mod db;
+mod email;
+mod grpc;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv().ok();
     tracing_subscriber::fmt::init();
 
-    let mut db = db::connection::DbConnection::new(); 
+    let mut db = db::connection::DbConnection::new();
     db.connect().await?;
 
     let grpc_task = tokio::spawn(grpc::run());

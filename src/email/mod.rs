@@ -1,7 +1,7 @@
 pub mod config;
 pub mod providers;
 
-use anyhow::{Result, Error};
+use anyhow::{Error, Result};
 
 #[derive(Debug)]
 pub struct Email {
