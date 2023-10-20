@@ -29,7 +29,7 @@ impl Test for TestService {
 }
 
 pub async fn run() -> Result<(), Error> {
-    let addr = "[::1]:50051".parse().context("Failed to parse address")?;
+    let addr = "127.0.0.1:50051".parse().context("Failed to parse address")?;
     let test_service = TestService::default();
 
     let server = TonicServer::builder()
@@ -42,7 +42,7 @@ pub async fn run() -> Result<(), Error> {
             return Ok(());
         }
         Err(err) => {
-            error!("Error starting GRPC server: {}", err);
+            error!("Error starting GRPC server: {}", err.to_string());
             return Err(err.into());
         }
     }
