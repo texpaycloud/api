@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use config::Config;
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub enum EmailProvider {
@@ -24,10 +24,8 @@ impl EmailConfig {
                 "SES" => EmailProvider::SES,
                 _ => {
                     panic!("Invalid email provider: {}", provider_string);
-                },
-            }
+                }
+            },
         })
     }
 }
-
-

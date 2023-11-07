@@ -31,7 +31,9 @@ impl Test for TestService {
 }
 
 pub async fn run() -> Result<(), Error> {
-    let addr = "127.0.0.1:50051".parse().context("Failed to parse address")?;
+    let addr = "127.0.0.1:50051"
+        .parse()
+        .context("Failed to parse address")?;
     let test_service = TestService::default();
 
     let server = TonicServer::builder()

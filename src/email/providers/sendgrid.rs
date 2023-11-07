@@ -1,11 +1,11 @@
-use crate::email::EmailService;
 use crate::email::Email;
+use crate::email::EmailService;
 use anyhow::{Error, Result};
 
 pub struct SendgridProvider;
 
 impl SendgridProvider {
-    pub fn new() -> Self{
+    pub fn new() -> Self {
         todo!("implement Sendgrid provider");
     }
 }

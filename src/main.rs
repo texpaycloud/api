@@ -11,13 +11,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let settings = config::CONFIG.clone();
     println!("{:?}", settings);
 
-
     let email_config = config::email::EmailConfig::new(&settings)?;
     let email_client = email::EmailClient::new(email_config).await?;
-    
+
     tracing_subscriber::fmt::init();
-
-
 
     let mut db = db::connection::DbConnection::new();
     db.connect().await?;

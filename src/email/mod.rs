@@ -1,8 +1,8 @@
 pub mod providers;
 
-use anyhow::{Error, Result};
 use super::config::email::EmailConfig;
 use super::config::email::EmailProvider;
+use anyhow::{Error, Result};
 
 #[derive(Debug)]
 pub struct Email {
@@ -25,20 +25,11 @@ pub struct EmailClient {
 impl EmailClient {
     pub async fn new(config: EmailConfig) -> Result<Self> {
         let provider: Box<dyn EmailService> = match config.provider {
-            EmailProvider::Sendgrid => {
-                Box::new(providers::sendgrid::SendgridProvider::new())
-            },
-            EmailProvider::Mailgun => {
-                Box::new(providers::mailgun::MailgunProvider::new())
-            },
-            EmailProvider::SES => {
-                Box::new(providers::SES::SESProvider::new().await)
-            },
+            EmailProvider::Sendgrid => Box::new(providers::sendgrid::SendgridProvider::new()),
+            EmailProvider::Mailgun => Box::new(providers::mailgun::MailgunProvider::new()),
+            EmailProvider::SES => Box::new(providers::SES::SESProvider::new().await),
         };
-        
-        Ok(Self {
-            provider,
-            config,
-        })
+
+        Ok(Self { provider, config })
     }
 }

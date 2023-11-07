@@ -44,10 +44,17 @@ impl EmailService for SESProvider {
             .data(email.subject)
             .charset("UTF-8")
             .build();
-        let body_content = Content::builder().data(email.body).charset("UTF-8").build().expect("Failed to build body content");
+        let body_content = Content::builder()
+            .data(email.body)
+            .charset("UTF-8")
+            .build()
+            .expect("Failed to build body content");
         let body = Body::builder().text(body_content).build();
 
-        let msg = Message::builder().subject(subject.expect("Failed to build subject")).body(body).build();
+        let msg = Message::builder()
+            .subject(subject.expect("Failed to build subject"))
+            .body(body)
+            .build();
 
         let email_content = EmailContent::builder().simple(msg).build();
 

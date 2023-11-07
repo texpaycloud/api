@@ -1,11 +1,11 @@
-use crate::email::EmailService;
 use crate::email::Email;
+use crate::email::EmailService;
 use anyhow::{Error, Result};
 
 pub struct MailgunProvider;
 
 impl MailgunProvider {
-    pub fn new() -> Self{
+    pub fn new() -> Self {
         todo!("implement Mailgun provider");
     }
 }
