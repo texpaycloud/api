@@ -14,7 +14,8 @@ impl DbConnection {
     }
 
     pub async fn connect(&mut self) -> Result<(), Error> {
-        let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        // TODO: move this to new config system
+        let db_url = env::var("CONFIG_DATABASE_URL").expect("DATABASE_URL must be set");
 
         self.pool = Some(
             PgPoolOptions::new()

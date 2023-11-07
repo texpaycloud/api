@@ -24,6 +24,8 @@ impl Test for TestService {
             server: "Test server".into(),
         };
 
+        info!("grpc test: {:?}", &reply);
+
         Ok(TonicResponse::new(reply))
     }
 }

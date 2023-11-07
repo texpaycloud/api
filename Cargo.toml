@@ -21,6 +21,8 @@ futures = "0"
 async-trait = "0"
 prost = "0"
 tonic = "0"
+config = "0"
+lazy_static = "1.4.0"
 
 
 [build-dependencies]
