@@ -3,6 +3,7 @@ use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_sqs::{types::Message, Client};
 use tracing::error;
 
+#[derive(Debug)]
 pub struct SQS {
     client: Client,
 }
@@ -106,5 +107,29 @@ impl SQS {
         }
 
         Ok(Some(cloned))
+    }
+
+    /// Pushes a message to the specified queue.
+    pub async fn push_one_message(
+        &self,
+        queue_type: QueueType,
+        message: impl Into<String>,
+    ) -> Result<(), Error> {
+        let queue_url = self.get_queue_url(queue_type).await?;
+
+        let send_response = self
+            .client
+            .send_message()
+            .queue_url(&queue_url)
+            .message_body(message.into())
+            .send()
+            .await;
+
+        if let Err(err) = send_response {
+            error!("Failed to push message to queue: {:?}", err);
+            return Err(err.into());
+        }
+
+        Ok(())
     }
 }

@@ -1,6 +1,9 @@
+mod email;
 pub mod proto;
 
 use anyhow::{Context, Error, Result};
+use email::EmailService;
+use proto::email_server::{Email, EmailServer};
 use proto::test_server::{Test, TestServer};
 use proto::{TestRequest, TestResponse};
 use tonic::{
@@ -17,16 +20,19 @@ impl Test for TestService {
         &self,
         request: TonicRequest<TestRequest>,
     ) -> Result<TonicResponse<TestResponse>, Status> {
-        let msg = request.into_inner().message;
+        // let msg = request.into_inner().message;
 
-        let reply = TestResponse {
-            message: format!("Hello {}!", msg),
+        // let reply = TestResponse {
+        //     message: format!("Hello {}!", msg),
+        //     server: "Test server".into(),
+        // };
+
+        // info!("grpc test: {:?}", &reply);
+
+        Ok(TonicResponse::new(TestResponse {
+            message: "Hello World!".into(),
             server: "Test server".into(),
-        };
-
-        info!("grpc test: {:?}", &reply);
-
-        Ok(TonicResponse::new(reply))
+        }))
     }
 }
 
@@ -34,10 +40,13 @@ pub async fn run() -> Result<(), Error> {
     let addr = "127.0.0.1:50051"
         .parse()
         .context("Failed to parse address")?;
+
     let test_service = TestService::default();
+    let email_service = EmailService::new().await?;
 
     let server = TonicServer::builder()
         .add_service(TestServer::new(test_service))
+        .add_service(EmailServer::new(email_service))
         .serve(addr);
 
     match server.await {

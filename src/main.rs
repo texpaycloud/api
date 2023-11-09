@@ -5,18 +5,22 @@ mod db;
 mod email;
 mod grpc;
 
+use common::queue::SQS;
+use config::email::EmailConfig;
+use db::connection::DbConnection;
+use email::EmailClient;
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv().ok();
     let settings = config::CONFIG.clone();
-    println!("{:?}", settings);
 
-    let email_config = config::email::EmailConfig::new(&settings)?;
-    let email_client = email::EmailClient::new(email_config).await?;
+    let email_config = EmailConfig::new(&settings)?;
+    let email_client = EmailClient::new(email_config).await?;
 
     tracing_subscriber::fmt::init();
 
-    let mut db = db::connection::DbConnection::new();
+    let mut db = DbConnection::new();
     db.connect().await?;
 
     let grpc_task = tokio::spawn(grpc::run());

@@ -1,7 +1,6 @@
 use anyhow::{Context, Error, Result};
 use hyper::{Body, Request, Response, Server, StatusCode};
-use routerify::prelude::*;
-use routerify::{Middleware, RequestInfo, Router, RouterService};
+use routerify::{RequestInfo, Router, RouterService};
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use tracing::{error, info};
@@ -10,16 +9,16 @@ async fn home_handler(_req: Request<Body>) -> Result<Response<Body>, Infallible>
     Ok(Response::new(Body::from("Hello world")))
 }
 
-async fn logger(req: Request<Body>) -> Result<Request<Body>, Infallible> {
-    info!(
-        "{} {} {}",
-        req.remote_addr(),
-        req.method(),
-        req.uri().path()
-    );
+// async fn logger(req: Request<Body>) -> Result<Request<Body>, Infallible> {
+//     info!(
+//         "{} {} {}",
+//         req.remote_addr(),
+//         req.method(),
+//         req.uri().path()
+//     );
 
-    Ok(req)
-}
+//     Ok(req)
+// }
 
 async fn error_handler(err: routerify::RouteError, _: RequestInfo) -> Response<Body> {
     error!("{}", err);
@@ -31,7 +30,8 @@ async fn error_handler(err: routerify::RouteError, _: RequestInfo) -> Response<B
 
 fn router() -> Router<Body, Infallible> {
     Router::builder()
-        .middleware(Middleware::pre(logger))
+        // TODO: this middleware causes massive performance degredation
+        // .middleware(Middleware::pre(logger))
         .get("/", home_handler)
         .err_handler_with_info(error_handler)
         .build()

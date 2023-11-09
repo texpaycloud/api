@@ -2,6 +2,7 @@ pub mod providers;
 
 use super::config::email::EmailConfig;
 use super::config::email::EmailProvider;
+use crate::grpc::proto::EmailRequest;
 use anyhow::{Error, Result};
 
 #[derive(Debug)]
@@ -10,6 +11,17 @@ pub struct Email {
     pub from: String,
     pub subject: String,
     pub body: String,
+}
+
+impl From<EmailRequest> for Email {
+    fn from(request: EmailRequest) -> Self {
+        Self {
+            to: request.to,
+            from: request.from,
+            subject: request.subject,
+            body: request.body,
+        }
+    }
 }
 
 #[async_trait::async_trait]
@@ -27,7 +39,7 @@ impl EmailClient {
         let provider: Box<dyn EmailService> = match config.provider {
             EmailProvider::Sendgrid => Box::new(providers::sendgrid::SendgridProvider::new()),
             EmailProvider::Mailgun => Box::new(providers::mailgun::MailgunProvider::new()),
-            EmailProvider::SES => Box::new(providers::SES::SESProvider::new().await),
+            EmailProvider::SES => Box::new(providers::ses::SESProvider::new().await),
         };
 
         Ok(Self { provider, config })
