@@ -6,7 +6,4 @@ fn main() {
             &["src/grpc/proto"],
         )
         .unwrap();
-
-    // tonic_build::compile_protos("src/grpc/proto/test.proto").unwrap();
-    // tonic_build::compile_protos("src/grpc/proto/email.proto").unwrap();
 }

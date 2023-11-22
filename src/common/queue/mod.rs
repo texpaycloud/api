@@ -1,5 +1,6 @@
 use anyhow::{Error, Result};
 use aws_config::meta::region::RegionProviderChain;
+use aws_config::BehaviorVersion;
 use aws_sdk_sqs::{types::Message, Client};
 use tracing::error;
 
@@ -15,8 +16,7 @@ pub enum QueueType {
 
 impl SQS {
     pub async fn new() -> Self {
-        let region_provider = RegionProviderChain::default_provider().or_else("us-east-1");
-        let config = aws_config::from_env().region(region_provider).load().await;
+        let config = aws_config::defaults(BehaviorVersion::latest()).region("us-east-1").load().await;
         let client = Client::new(&config);
 
         Self { client }
@@ -38,6 +38,7 @@ impl SQS {
         }
     }
 
+    // TODO: this is a really hacky way to get the queue url
     async fn get_queue_url(&self, queue_type: QueueType) -> Result<String, Error> {
         let queue_name = match queue_type {
             QueueType::Email => "email",
@@ -46,18 +47,13 @@ impl SQS {
 
         let queue_urls = self.get_available_queues().await?;
 
-        let url = match queue_urls.iter().find(|&url| url.contains(queue_name)) {
+         match queue_urls.iter().find(|&url| url.contains(queue_name)) {
             Some(url) => Ok(url.to_string()),
             None => Err(Error::msg(format!(
                 "No SQS queue found containing: {}",
                 queue_name
             ))),
-        };
-
-        return match url {
-            Ok(url) => Ok(url),
-            Err(err) => Err(err),
-        };
+        }
     }
 
     /// Pulls a single message from the specified queue.
