@@ -16,7 +16,10 @@ pub enum QueueType {
 
 impl SQS {
     pub async fn new() -> Self {
-        let config = aws_config::defaults(BehaviorVersion::latest()).region("us-east-1").load().await;
+        let config = aws_config::defaults(BehaviorVersion::latest())
+            .region("us-east-1")
+            .load()
+            .await;
         let client = Client::new(&config);
 
         Self { client }
@@ -47,7 +50,7 @@ impl SQS {
 
         let queue_urls = self.get_available_queues().await?;
 
-         match queue_urls.iter().find(|&url| url.contains(queue_name)) {
+        match queue_urls.iter().find(|&url| url.contains(queue_name)) {
             Some(url) => Ok(url.to_string()),
             None => Err(Error::msg(format!(
                 "No SQS queue found containing: {}",

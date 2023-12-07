@@ -1,6 +1,6 @@
 use anyhow::{Context, Error, Result};
 use hyper::{Body, Request, Response, Server, StatusCode};
-use routerify::{RequestInfo, Router, RouterService, Middleware, ext::RequestExt};
+use routerify::{ext::RequestExt, Middleware, RequestInfo, Router, RouterService};
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use tracing::{error, info};
